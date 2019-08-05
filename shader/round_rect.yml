@@ -1,0 +1,10 @@
+name: round_rect
+diffuseColor: {a: 1.0, r: 0.92, g: 1.0, b: 0.92}
+ambientColor: {a: 1.0, r: 0.1, g: 0.1, b: 0.1}
+printShader: False
+shaderSources:
+  vertexShader: round_rect.vert
+  fragmentShader: round_rect.frag
+shader:
+  PixelLightVertex: 1
+  PixelLightFragment: 1

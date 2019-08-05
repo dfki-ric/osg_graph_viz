@@ -1,0 +1,10 @@
+name: smooth_edge
+diffuseColor: {a: 1.0, r: 0.92, g: 1.0, b: 0.92}
+ambientColor: {a: 1.0, r: 0.1, g: 0.1, b: 0.1}
+printShader: False
+shaderSources:
+  vertexShader: smooth_edge.vert
+  fragmentShader: smooth_edge.frag
+shader:
+  PixelLightVertex: 1
+  PixelLightFragment: 1

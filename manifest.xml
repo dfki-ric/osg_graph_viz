@@ -1,0 +1,10 @@
+<package>
+    <description brief="osg_graph_viz">
+      2D graph visualization library based on OpenSceneGraph.
+   </description>
+   <depend package="simulation/lib_manager" />
+   <depend package="simulation/mars/common/utils" />
+   <depend package="simulation/mars/common/graphics/osg_text" />
+   <depend package="simulation/mars/common/graphics/osg_material_manager" />
+   <depend package="tools/configmaps" />
+</package>
