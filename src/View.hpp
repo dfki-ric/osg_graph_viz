@@ -147,6 +147,7 @@ namespace osg_graph_viz {
     bool roundNodes, mouseMoved;
     bool inScale;
     static unsigned long labelID;
+    static configmaps::ConfigMap bufferMap;
 
     osg_material_manager::OsgMaterialManager *materialManager;
     osg::ref_ptr<osg::Geode> selectionGeode;
@@ -168,6 +169,8 @@ namespace osg_graph_viz {
     void makeSelcetionInRect();
     void makeSelRect(const double xStart, const double yStart, const double xEnd, const double yEnd);
     void duplicateSelection();
+    void copySelection();
+    void pasteSelection();
     /*osg_graph_viz::Node* makeSelNode();
     void deletSelNode(Node *node);*/
 

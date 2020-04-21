@@ -30,6 +30,7 @@ using namespace configmaps;
 namespace osg_graph_viz {
 
   unsigned long View::labelID = 0;
+  ConfigMap View::bufferMap;
 
   bool pathExists(const std::string &path) {
 #ifdef _WIN32
@@ -1226,6 +1227,16 @@ namespace osg_graph_viz {
           duplicateSelection();
           return true;
         }
+        if(ea.getKey() == 'C') {
+          fprintf(stderr, "copy\n");
+          copySelection();
+          return true;
+        }
+        if(ea.getKey() == 'V') {
+          fprintf(stderr, "paste\n");
+          pasteSelection();
+          return true;
+        }
         break;
       }
       default:
@@ -1365,6 +1376,83 @@ namespace osg_graph_viz {
       map["fromNode"] = nameMapping[map["fromNode"].getString()];
       map["toNode"] = nameMapping[map["toNode"].getString()];
       ui->addEdge(map);
+    }
+    for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = oldSelection.begin(); it != oldSelection.end(); ++it) {
+      (*it)->setSelected(false);
+    }
+    for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = newSelection.begin(); it != newSelection.end(); ++it) {
+      (*it)->setSelected(true);
+    }
+    newSelection.swap(selectedNodes);
+  }
+
+  void View::copySelection() {
+    std::list<osg::ref_ptr<osg_graph_viz::Node> > newSelection;
+    std::list<osg::ref_ptr<osg_graph_viz::Node> > oldSelection;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> > duplicateEdges;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> > outEdges;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> >::iterator outEdgesIt;
+    osg_graph_viz::Node *newNode;
+    bufferMap.clear();
+    std::map<std::string, std::string> nameMapping;
+    for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = nodeList.begin(); it != nodeList.end(); ++it){
+      if((*it)->isSelected()){
+        bufferMap["nodes"].append((*it)->getMap());
+        outEdges = (*it)->getOutputEdges();
+        for(outEdgesIt=outEdges.begin();
+            outEdgesIt!=outEdges.end();
+            ++outEdgesIt) {
+          if((*outEdgesIt)->getEndNode()->isSelected()) {
+            duplicateEdges.push_back(*outEdgesIt);
+          }
+        }
+        selectedNode = NULL;
+      }
+    }
+    for(outEdgesIt=duplicateEdges.begin();
+        outEdgesIt!=duplicateEdges.end();
+        ++outEdgesIt) {
+      bufferMap["edges"].append((*outEdgesIt)->getMap());
+    }
+  }
+
+  void View::pasteSelection() {
+    std::list<osg::ref_ptr<osg_graph_viz::Node> > newSelection;
+    std::list<osg::ref_ptr<osg_graph_viz::Node> > oldSelection;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> > duplicateEdges;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> > outEdges;
+    std::vector<osg::ref_ptr<osg_graph_viz::Edge> >::iterator outEdgesIt;
+    osg_graph_viz::Node *newNode;
+    std::map<std::string, std::string> nameMapping;
+
+    if(!bufferMap.hasKey("nodes")) {
+      return;
+    }
+
+    // clear selection
+    for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = nodeList.begin(); it != nodeList.end(); ++it){
+      if((*it)->isSelected()) {
+          oldSelection.push_back(*it);
+        selectedNode = NULL;
+      }
+    }
+    for(auto node: bufferMap["nodes"]) {
+      if((newNode = ui->addNode(node))) {
+        ConfigMap m2 = newNode->getMap();
+        node["id"] = m2["id"];
+        node["order"] = m2["order"];
+        nameMapping[node["name"]] = newNode->getName();
+        newSelection.push_back(newNode);
+        node["name"] = newNode->getName();
+        newNode->updateMap(node);
+      }
+    }
+    if(bufferMap.hasKey("edges")) {
+      for(auto edge: bufferMap["edges"]) {
+        edge["fromNode"] = nameMapping[edge["fromNode"].getString()];
+        edge["toNode"] = nameMapping[edge["toNode"].getString()];
+        ui->addEdge(edge);
+      }
     }
     for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = oldSelection.begin(); it != oldSelection.end(); ++it) {
       (*it)->setSelected(false);
