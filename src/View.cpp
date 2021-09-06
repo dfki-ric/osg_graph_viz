@@ -438,7 +438,7 @@ namespace osg_graph_viz {
     }
 
     // mouse press for selection
-    if(button & 1) {
+    if(button == 1) {
       osg_graph_viz::Node *oldNode = selectedNode.get();
       osg_graph_viz::Edge *oldEdge = selectedEdge.get();
       std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it, jt;
@@ -734,14 +734,13 @@ namespace osg_graph_viz {
       }
       ui->rightClick(n, inPort, outPort, e, x, y);
     }
-    mouseMask = button;
     mouseX = x;
     mouseY = y;
     nodeToMove = 0;
 
     int toIdx;
     double vX, vY;
-    if(addEdge && !(button & 1)) {
+    if(addEdge && !(button & 1) && (mouseMask & 1)) {
       std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it;
       for(it=nodeList.begin(); it!=nodeList.end(); ++it) {
         if((*it)->checkMouseInPortPress(cPosX, cPosY,
@@ -781,6 +780,7 @@ namespace osg_graph_viz {
         selectedNode = NULL;
       }
     }
+    mouseMask = button;
     dontDeselectOnRelease = false;
 
     //Part of the multiSelection, uses the last updated(from mouseMove) x and y values as end of selection.
