@@ -1193,9 +1193,6 @@ namespace osg_graph_viz {
           deleteKey();
         }
         if(ea.getModKeyMask() == osgGA::GUIEventAdapter::MODKEY_SHIFT) {
-          setModKey(true);
-        }
-        else {
           setModKey(false);
         }
         if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape) {
@@ -1213,11 +1210,10 @@ namespace osg_graph_viz {
         break;
       }
       case osgGA::GUIEventAdapter::KEYDOWN: {
-        if(ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT) {
+        if(ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT or
+           ea.getKey() == osgGA::GUIEventAdapter::KEY_Shift_L or
+           ea.getKey() == osgGA::GUIEventAdapter::KEY_Shift_R) {
           setModKey(true);
-        }
-        else {
-          setModKey(false);
         }
         if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape) {
           return true;
