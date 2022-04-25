@@ -8,6 +8,8 @@ find_package(lib_manager)
 lib_defaults()
 define_module_info()
 
+add_definitions(-DOSG_GRAPH_VIZ_DEFAULT_RESOURCES_PATH=\"${CMAKE_INSTALL_PREFIX}/share/osg_graph_viz\")
+
 find_package(OpenSceneGraph REQUIRED osgManipulator osgViewer osgFX osgShadow osgParticle osgTerrain osgDB osgGA osgWidget osgText osgUtil)
 include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
 link_directories(${OPENSCENEGRAPH_LIBRARY_DIRS})

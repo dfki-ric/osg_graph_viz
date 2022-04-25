@@ -68,6 +68,7 @@ namespace osg_graph_viz {
     }
     retinaScale = 1.0;
     inScale = false;
+    resourcesPath = OSG_GRAPH_VIZ_DEFAULT_RESOURCES_PATH;
   }
 
   View::~View(void) {
@@ -76,8 +77,8 @@ namespace osg_graph_viz {
 
   void View::init(double hFS, double pFS, double ps, bool classicLook) {
     roundNodes = !classicLook;
-    std::string rp = resourcesPath+"..";
-    materialManager = new osg_material_manager::OsgMaterialManager(rp);
+    std::string rp = resourcesPath+"/..";
+    materialManager = new osg_material_manager::OsgMaterialManager(NULL);
     headerFontSize = hFS;
     portFontSize = pFS;
     mergeIconSize = portFontSize;
