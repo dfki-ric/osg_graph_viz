@@ -1112,7 +1112,11 @@ namespace osg_graph_viz {
       osg::Quat q;
       q.makeRotate(d1, d2);
       osg::Vec3 d3;
+#ifdef OSG_USE_FLOAT_QUAT
+      float angle;
+#else
       double angle;
+#endif
       q.getRotate(angle, d3);
       if(angle > 3.14) {
         // scaling
