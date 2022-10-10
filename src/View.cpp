@@ -1223,17 +1223,17 @@ namespace osg_graph_viz {
         if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape) {
           return true;
         }
-        if(ea.getKey() == 'D') {
+        if(ea.getKey() == 'D' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT || ea.getKey() == 'd')) {
           fprintf(stderr, "duplicate\n");
           duplicateSelection();
           return true;
         }
-        if(ea.getKey() == 'C') {
+        if(ea.getKey() == 'C' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT || ea.getKey() == 'c')) {
           fprintf(stderr, "copy\n");
           copySelection();
           return true;
         }
-        if(ea.getKey() == 'V') {
+        if(ea.getKey() == 'V' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT || ea.getKey() == 'v')) {
           fprintf(stderr, "paste\n");
           pasteSelection();
           return true;
