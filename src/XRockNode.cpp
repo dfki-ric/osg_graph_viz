@@ -649,7 +649,7 @@ namespace osg_graph_viz {
     }
   }
 
-  configmaps::ConfigMap XRockNode::getOutPortEdgeInfo(int index) {
+  configmaps::ConfigMap XRockNode::getOutPortEdgeInfo(size_t index) {
     ConfigMap map;
     assert(index >= 0 && index < info.map["outputs"].size());
     map["dataType"] = info.map["outputs"][index]["type"];
@@ -835,7 +835,6 @@ namespace osg_graph_viz {
   }
 
   void XRockNode::handleFilterEdges(bool hide) {
-    size_t t;
     std::list<osg::ref_ptr<Edge> >::iterator it;
     for(size_t i=0; i<inPorts.size(); ++i) {
       handlePortEdgeVisibility(inPorts[i], hide);

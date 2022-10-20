@@ -41,7 +41,7 @@ namespace osg_graph_viz {
     init();
   }
 
-  Node::Node(const NodeInfo &info_, View *v) : view(v), info(info_) {
+  Node::Node(const NodeInfo &info_, View *v) : info(info_), view(v) {
     init();
     initContent();
   }
@@ -563,8 +563,6 @@ namespace osg_graph_viz {
   void Node::handleMeta(){
     osg_text::Color c(0., 0., 0., 1.0);
     double space = 5.0;
-    double font_size;
-
     // adapt the box size
     double x1, x2, y1, y2;
     nodeName->getRectangle(&x1, &x2, &y1, &y2);
@@ -954,7 +952,6 @@ namespace osg_graph_viz {
   }
 
   void Node::decoupleEdges() {
-    size_t t;
     for(size_t i=0; i<inPorts.size(); ++i) {
       for (auto it=inPorts[i]->edges.begin(); it!=inPorts[i]->edges.end(); it++) {
         (*it)->decoupleEdge();
@@ -1540,7 +1537,6 @@ namespace osg_graph_viz {
     std::vector<osg::Vec4>::iterator it;
     if(colorMap.find(color) != colorMap.end()) {
       std::vector<osg::Vec4> &colors = colorMap[color];
-      int i=0;
       if(gardientHeader) {
         bColors->push_back(colors[0]);
         bColors->push_back(colors[1]);
@@ -1782,7 +1778,6 @@ namespace osg_graph_viz {
       double portPosY = portStartY - portSpaceY*(i);
       std::string linkname = replaceString(name, ">", "gt_");
       fprintf(f, "    <rect ry=\"2.873735\" x=\"%g\" y=\"%g\" height=\"%g\" width=\"%g\" id=\"%s_in_%d\" style=\"opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1\" />\n", -pm*0.5+ol, -(portPosY+pm*0.5)+ot, pm, pm, linkname.c_str(), i);
-      int k=0;
       for(auto label: it->labels) {
         View::exportLabelToSvg(label, f, ol, ot);
       }

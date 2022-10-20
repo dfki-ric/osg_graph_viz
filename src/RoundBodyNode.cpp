@@ -95,7 +95,6 @@ namespace osg_graph_viz {
     std::vector<osg::Vec4>::iterator it;
     if(colorMap.find(color) != colorMap.end()) {
       std::vector<osg::Vec4> &colors = colorMap[color];
-      int i=0;
       for(it=colors.begin(); it!=colors.end(); ++it) {
         bColors->push_back(*it);
       }
