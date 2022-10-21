@@ -29,7 +29,7 @@ namespace osg_graph_viz {
     void derenderText(const bool readable);
     /*void confMapToYml(Node *node);
     void SelRecResize(double w, double h,Node *node);*/
-    configmaps::ConfigMap getOutPortEdgeInfo(size_t index);
+    configmaps::ConfigMap getOutPortEdgeInfo(int index);
     void markInputsByEdgeInfo(configmaps::ConfigMap &map);
     void unmarkInputs();
     bool isCompatible(configmaps::ConfigMap &map, size_t index);

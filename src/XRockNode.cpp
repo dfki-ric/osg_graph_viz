@@ -649,7 +649,7 @@ namespace osg_graph_viz {
     }
   }
 
-  configmaps::ConfigMap XRockNode::getOutPortEdgeInfo(size_t index) {
+  configmaps::ConfigMap XRockNode::getOutPortEdgeInfo(int index) {
     ConfigMap map;
     assert(index >= 0 && index < info.map["outputs"].size());
     map["dataType"] = info.map["outputs"][index]["type"];
