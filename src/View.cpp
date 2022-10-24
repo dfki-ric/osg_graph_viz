@@ -352,7 +352,7 @@ namespace osg_graph_viz {
         bool checkHeader = false;
         std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it;
         for(it = selectedNodes.begin(); it != selectedNodes.end(); ++it) {
-          double oldX, oldY, newX, newY;
+          //double oldX, oldY, newX, newY;
           //(*it)->getPosition(&oldX, &oldY);
           (*it)->setPosition2(cPosX, cPosY);
           //(*it)->getPosition(&newX, &newY);
@@ -366,7 +366,7 @@ namespace osg_graph_viz {
         */
         // this is when a node is just selected by pressing and then moved before releasing
         if(nodeToMove) {
-          double oldX, oldY, newX, newY;
+          //double oldX, oldY, newX, newY;
           //nodeToMove->getPosition(&oldX, &oldY);
           nodeToMove->setPosition2(cPosX, cPosY);
           checkHeader = true;
@@ -1093,7 +1093,7 @@ namespace osg_graph_viz {
                     osgGA::GUIActionAdapter& aa) {
     double w = windowWidth;
     double h = windowHeight;
-    double scrollUpdate = 0.8;
+    //double scrollUpdate = 0.8;
     static osg::Vec3 p1(0,0,0), p2(0,0,0);
     if(ea.isMultiTouchEvent() && ea.getTouchData()->getNumTouchPoints() == 2) {
       osg::Vec3 t1(ea.getTouchData()->get(0).x,
@@ -1180,8 +1180,10 @@ namespace osg_graph_viz {
             mainPos->setPosition(osg::Vec3(posX, posY, 0.0));
             break;
           }
+          default:
+            break;
           }
-        break;
+           break;
       }
       case osgGA::GUIEventAdapter::PUSH: {
         mousePress(retinaScale*ea.getX()/windowWidth, retinaScale*ea.getY()/windowHeight,
@@ -1220,22 +1222,43 @@ namespace osg_graph_viz {
            ea.getKey() == osgGA::GUIEventAdapter::KEY_Shift_R) {
           setModKey(true);
         }
-        if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape) {
+        if (ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape)
+        {
           return true;
         }
-        if(ea.getKey() == 'D' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL || ea.getKey() == 'd')) {
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'D' - 'A' + 1 || ea.getKey() == 'd' - 'a' + 1))
+        {
           fprintf(stderr, "duplicate\n");
           duplicateSelection();
           return true;
         }
-        if(ea.getKey() == 'C' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL || ea.getKey() == 'c')) {
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'C' - 'A' + 1 || ea.getKey() == 'c' - 'a' + 1))
+        {
           fprintf(stderr, "copy\n");
           copySelection();
           return true;
         }
-        if(ea.getKey() == 'V' || (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL || ea.getKey() == 'v')) {
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'V' - 'A' + 1 || ea.getKey() == 'v' - 'a' + 1))
+        {
           fprintf(stderr, "paste\n");
           pasteSelection();
+          return true;
+        }
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'Z' - 'A' + 1 || ea.getKey() == 'z' - 'a' + 1))
+        {
+          fprintf(stderr, "undo \n");
+          undoPreviousAction();
+          return true;
+        }
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'Y' - 'A' + 1 || ea.getKey() == 'y' - 'a' + 1))
+        {
+          fprintf(stderr, "redo \n");
+          redoPreviousAction();
           return true;
         }
         break;
@@ -1393,7 +1416,7 @@ namespace osg_graph_viz {
     std::vector<osg::ref_ptr<osg_graph_viz::Edge> > duplicateEdges;
     std::vector<osg::ref_ptr<osg_graph_viz::Edge> > outEdges;
     std::vector<osg::ref_ptr<osg_graph_viz::Edge> >::iterator outEdgesIt;
-    osg_graph_viz::Node *newNode;
+    //osg_graph_viz::Node *newNode;
     bufferMap.clear();
     std::map<std::string, std::string> nameMapping;
     for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = nodeList.begin(); it != nodeList.end(); ++it){
@@ -1462,6 +1485,12 @@ namespace osg_graph_viz {
       (*it)->setSelected(true);
     }
     newSelection.swap(selectedNodes);
+  }
+  void View::undoPreviousAction() {
+     ui->undo();
+  }
+  void View::redoPreviousAction() {
+     ui->redo();
   }
 
   void View::getWindowPixelSize(double *x, double *y) {

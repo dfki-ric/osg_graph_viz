@@ -34,6 +34,9 @@ namespace osg_graph_viz {
     virtual void loadTab(const std::string &s, configmaps::ConfigMap &map) {}
     virtual bool groupNodes(const std::string &parent,
 			    const std::string &child) {return true;}
+    virtual void undo() {}
+    virtual void redo() {}
+
 
   };
   
