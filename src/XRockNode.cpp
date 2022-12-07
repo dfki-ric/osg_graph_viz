@@ -13,6 +13,7 @@
 #include <osg/LineWidth>
 #include <cstdio>
 #include <configmaps/ConfigData.h>
+#include <mars/utils/misc.h>
 
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
@@ -70,32 +71,33 @@ namespace osg_graph_viz {
     portSpaceY = 3.0*mergeIconSize * 1.2;
     portStartY = -headerHeight - mergeIconSize*4;
     width = 150.;
-
-    if((std::string)info.map["domain"] == "software") {
+    std::string domain = info.map["domain"];
+    domain = mars::utils::tolower(domain);
+    if(domain == "software") {
       colorMap["taskNode"].push_back(osg::Vec4(0.92, 1.0, 0.92, 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.3, 0.5, 0.3, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
     }
-    else if((std::string)info.map["domain"] == "electronics") {
+    else if(domain == "electronics") {
       colorMap["taskNode"].push_back(osg::Vec4(0.85, .92, 1., 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.3, 0.3, 0.5, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 0.77, 1., 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, .77, 1, 1.0));
     }
-    else if((std::string)info.map["domain"] == "mechanics") {
+    else if(domain == "mechanics") {
       colorMap["taskNode"].push_back(osg::Vec4(0.95, .9, 0.8, 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.4, 0.4, 0.3, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.95, 0.8, 0.5, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.95, 0.8, 0.5, 1.0));
     }
-    else if((std::string)info.map["domain"] == "behavior") {
+    else if(domain == "behavior") {
       colorMap["taskNode"].push_back(osg::Vec4(1.0, .8, 0.8, 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.5, 0.3, 0.3, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(1.0, 0.6, 0.6, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(1.0, 0.6, 0.6, 1.0));
     }
-    else if((std::string)info.map["domain"] == "computation") {
+    else if(domain == "computation") {
       colorMap["taskNode"].push_back(osg::Vec4(1.0, .8, 0.8, 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.5, 0.3, 0.3, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(1.0, 0.6, 0.6, 1.0));
@@ -200,8 +202,8 @@ namespace osg_graph_viz {
       std::string merge;
       double biasValue, defValue;
       bool hasMerge = getMergeInfo(i, &biasValue, &defValue, &merge);
-      if(info.map["domain"] == "assembly" && info.map["inputs"][i].hasKey("domain")) {
-        domain << info.map["inputs"][i]["domain"];
+      if(mars::utils::tolower(info.map["domain"]) == "assembly" && info.map["inputs"][i].hasKey("domain")) {
+        domain = mars::utils::tolower(info.map["inputs"][i]["domain"]);
       }
       Port *p;
       if(update) {
@@ -346,8 +348,8 @@ namespace osg_graph_viz {
       std::string type = (std::string)info.map["outputs"][i]["type"];
       std::string domain;
       std::string direction;
-      if(info.map["domain"] == "assembly" && info.map["outputs"][i].hasKey("domain")) {
-        domain << info.map["outputs"][i]["domain"];
+      if(mars::utils::tolower(info.map["domain"]) == "assembly" && info.map["outputs"][i].hasKey("domain")) {
+        domain = mars::utils::tolower(info.map["outputs"][i]["domain"]);
       }
       if(info.map["outputs"][i].hasKey("direction")) {
         direction << info.map["outputs"][i]["direction"];
@@ -670,15 +672,15 @@ namespace osg_graph_viz {
     osg::ref_ptr<Node> source = view->getNodeByName(sourceNode);
     ConfigMap sourceMap = source->getMap();
     if(sourceMap.hasKey("domain")) {
-      std::string sourceDomain = sourceMap["domain"];
+      std::string sourceDomain = mars::utils::tolower(sourceMap["domain"]);
       if(sourceDomain == "assembly" && map.hasKey("domain")) {
-        sourceDomain << map["domain"];
+        sourceDomain = mars::utils::tolower(map["domain"]);
       }
       if(!info.map.hasKey("domain")) return false;
-      std::string targetDomain = info.map["domain"];
+      std::string targetDomain = mars::utils::tolower(info.map["domain"]);
       if(targetDomain == "assembly") {
         if(info.map["inputs"][index].hasKey("domain")) {
-          targetDomain << info.map["inputs"][index]["domain"];
+          targetDomain = mars::utils::tolower(info.map["inputs"][index]["domain"]);
         }
       }
       //fprintf(stderr, "domains: %s %s\n", sourceDomain.c_str(), targetDomain.c_str());
@@ -719,8 +721,8 @@ namespace osg_graph_viz {
         interface = info.map["inputs"][i]["interface"];
       }
       std::string domain;
-      if(info.map["domain"] == "assembly" && info.map["inputs"][i].hasKey("domain")) {
-        domain << info.map["inputs"][i]["domain"];
+      if(mars::utils::tolower(info.map["domain"]) == "assembly" && info.map["inputs"][i].hasKey("domain")) {
+        domain = mars::utils::tolower(info.map["inputs"][i]["domain"]);
       }
       osg::Vec4 c(1.0, 1.0, 1.0, 1);
       if(!interface && !domain.empty()) {
@@ -757,13 +759,13 @@ namespace osg_graph_viz {
   void XRockNode::filterUpdate() {
     std::map<std::string, int> &filterMap = view->getFilterMap();
     std::map<std::string, int>::iterator it;
-    std::string domain = info.map["domain"];
+    std::string domain = mars::utils::tolower(info.map["domain"]);
     if(domain == "assembly") {
       for(size_t i=0; i<inPorts.size(); ++i) {
         Port *p = inPorts[i];
         std::string iDomain;
         if(info.map["inputs"][i].hasKey("domain")) {
-          iDomain << info.map["inputs"][i]["domain"];
+          iDomain = mars::utils::tolower(info.map["inputs"][i]["domain"]);
         }
         it=filterMap.find(iDomain);
         if(it!=filterMap.end()) {
@@ -787,7 +789,7 @@ namespace osg_graph_viz {
         Port *p = outPorts[i];
         std::string iDomain;
         if(info.map["outputs"][i].hasKey("domain")) {
-          iDomain << info.map["outputs"][i]["domain"];
+          iDomain = mars::utils::tolower(info.map["outputs"][i]["domain"]);
         }
         it=filterMap.find(iDomain);
         if(it!=filterMap.end()) {
