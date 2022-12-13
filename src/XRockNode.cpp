@@ -2,6 +2,7 @@
  * \file XRockNode.cpp
  * \author Malte (malte.langosz@dfki.de)
  * \brief A
+ * \todo  This file should be in bagel/xrock_gui_model and there should be an interface to register new osg_graph_viz node models
  *
  * Version 0.1
  */
@@ -197,6 +198,11 @@ namespace osg_graph_viz {
     for(int i=0; i<info.numInputs; ++i) {
       double portPosY = portStartY - portSpaceY*(portCnt);
       std::string name = (std::string)info.map["inputs"][i]["name"];
+      // Handle port alias
+      if (info.map["inputs"][i].hasKey("alias") && !info.map["inputs"][i]["alias"].getString().empty())
+      {
+          name = info.map["inputs"][i]["alias"].getString();
+      }
       std::string type = (std::string)info.map["inputs"][i]["type"];
       std::string domain;
       std::string merge;
@@ -345,6 +351,11 @@ namespace osg_graph_viz {
     for(int i=0; i<info.numOutputs; ++i) {
       double portPosY = portStartY - portSpaceY*(portCnt);
       std::string name = (std::string)info.map["outputs"][i]["name"];
+      // Handle port alias
+      if (info.map["outputs"][i].hasKey("alias") && !info.map["outputs"][i]["alias"].getString().empty())
+      {
+          name = info.map["outputs"][i]["alias"].getString();
+      }
       std::string type = (std::string)info.map["outputs"][i]["type"];
       std::string domain;
       std::string direction;
@@ -498,7 +509,13 @@ namespace osg_graph_viz {
     updateParentFromMap(map);
     info.map = map;
     setPosition(info.map["pos"]["x"], info.map["pos"]["y"]);
-    nodeName->setText((std::string)info.map["name"]);
+    // Check for alias (and show this instead of the name if not empty)
+    std::string name = info.map["name"].getString();
+    if (info.map.hasKey("alias") && !info.map["alias"].getString().empty())
+    {
+        name = info.map["alias"].getString();
+    }
+    nodeName->setText(name);
     for(size_t i=0; i<inPorts.size(); ++i) {
       std::string merge;
       double biasValue, defValue;
