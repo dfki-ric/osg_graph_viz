@@ -198,11 +198,6 @@ namespace osg_graph_viz {
     for(int i=0; i<info.numInputs; ++i) {
       double portPosY = portStartY - portSpaceY*(portCnt);
       std::string name = (std::string)info.map["inputs"][i]["name"];
-      // Handle port alias
-      if (info.map["inputs"][i].hasKey("alias") && !info.map["inputs"][i]["alias"].getString().empty())
-      {
-          name = info.map["inputs"][i]["alias"].getString();
-      }
       std::string type = (std::string)info.map["inputs"][i]["type"];
       std::string domain;
       std::string merge;
@@ -277,6 +272,11 @@ namespace osg_graph_viz {
         p->labels.push_back(t);
       }
       if(update) {
+          // Handle port alias
+          if (info.map["inputs"][i].hasKey("alias") && !info.map["inputs"][i]["alias"].getString().empty())
+          {
+              p->labels[0]->setText(info.map["inputs"][i]["alias"].getString());
+          }
         double x1, x2, y1, y2;
         double w2 = 0;
         double w4;
@@ -351,11 +351,6 @@ namespace osg_graph_viz {
     for(int i=0; i<info.numOutputs; ++i) {
       double portPosY = portStartY - portSpaceY*(portCnt);
       std::string name = (std::string)info.map["outputs"][i]["name"];
-      // Handle port alias
-      if (info.map["outputs"][i].hasKey("alias") && !info.map["outputs"][i]["alias"].getString().empty())
-      {
-          name = info.map["outputs"][i]["alias"].getString();
-      }
       std::string type = (std::string)info.map["outputs"][i]["type"];
       std::string domain;
       std::string direction;
@@ -413,6 +408,11 @@ namespace osg_graph_viz {
         p->labels.push_back(t);
       }
       if(update) {
+          // Handle port alias
+          if (info.map["outputs"][i].hasKey("alias") && !info.map["outputs"][i]["alias"].getString().empty())
+          {
+              p->labels[0]->setText(info.map["outputs"][i]["alias"].getString());
+          }
         double x1, x2, y1, y2;
         double w2 = 0;
         double w4;
