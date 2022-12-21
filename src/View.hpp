@@ -171,6 +171,8 @@ namespace osg_graph_viz {
     void duplicateSelection();
     void copySelection();
     void pasteSelection();
+    void undoPreviousAction();
+    void redoPreviousAction();
     /*osg_graph_viz::Node* makeSelNode();
     void deletSelNode(Node *node);*/
 

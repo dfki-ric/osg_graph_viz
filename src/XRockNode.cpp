@@ -72,6 +72,7 @@ namespace osg_graph_viz {
     portSpaceY = 3.0*mergeIconSize * 1.2;
     portStartY = -headerHeight - mergeIconSize*4;
     width = 150.;
+
     std::string domain = info.map["domain"];
     domain = mars::utils::tolower(domain);
     if(domain == "software") {
@@ -80,6 +81,7 @@ namespace osg_graph_viz {
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
     }
+
     else if(domain == "electronics") {
       colorMap["taskNode"].push_back(osg::Vec4(0.85, .92, 1., 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.3, 0.3, 0.5, 1.0));
@@ -299,19 +301,19 @@ namespace osg_graph_viz {
         }
         osg::Vec4 c(1.0, 1.0, 1.0, 1);
         if(!domain.empty()) {
-          if(domain == "mechanics") {
+          if(domain == "MECHANICS") {
             c = osg::Vec4(0.95, .9, 0.8, 1.0);
           }
-          else if(domain == "computation") {
+          else if(domain == "COMPUTATION") {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
-          else if(domain == "software") {
+          else if(domain == "SOFTWARE") {
             c = osg::Vec4(0.92, 1.0, 0.92, 1.0);
           }
-          else if(domain == "electronics") {
+          else if(domain == "ELECTRONICS") {
             c = osg::Vec4(0.85, .92, 1., 1.0);
           }
-          else if(domain == "behavior") {
+          else if(domain == "BEHAVIOR") {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
         }
@@ -431,19 +433,19 @@ namespace osg_graph_viz {
         }
         osg::Vec4 c(1.0, 1.0, 1.0, 1);
         if(!domain.empty()) {
-          if(domain == "mechanics") {
+          if(domain == "MECHANICS") {
             c = osg::Vec4(0.95, .9, 0.8, 1.0);
           }
-          else if(domain == "computation") {
+          else if(domain == "COMPUTATION") {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
-          else if(domain == "software") {
+          else if(domain == "SOFTWARE") {
             c = osg::Vec4(0.92, 1.0, 0.92, 1.0);
           }
-          else if(domain == "electronics") {
+          else if(domain == "ELECTRONICS") {
             c = osg::Vec4(0.85, .92, 1., 1.0);
           }
-          else if(domain == "behavior") {
+          else if(domain == "BEHAVIOR") {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
         }
@@ -743,19 +745,19 @@ namespace osg_graph_viz {
       }
       osg::Vec4 c(1.0, 1.0, 1.0, 1);
       if(!interface && !domain.empty()) {
-        if(domain == "mechanics") {
+        if(domain == "MECHANICS") {
           c = osg::Vec4(0.95, .9, 0.8, 1.0);
         }
-        else if(domain == "computation") {
+        else if(domain == "COMPUTATION") {
           c = osg::Vec4(1.0, .8, 0.8, 1.0);
         }
-        else if(domain == "software") {
+        else if(domain == "SOFTWARE") {
           c = osg::Vec4(0.92, 1.0, 0.92, 1.0);
         }
-        else if(domain == "electronics") {
+        else if(domain == "ELECTRONICS") {
           c = osg::Vec4(0.85, .92, 1., 1.0);
         }
-        else if(domain == "behavior") {
+        else if(domain == "BEHAVIOR") {
           c = osg::Vec4(1.0, .8, 0.8, 1.0);
         }
       }
