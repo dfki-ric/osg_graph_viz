@@ -81,7 +81,12 @@ namespace osg_graph_viz {
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.72, 1.0, 0.77, 1.0));
     }
-
+      else if(domain == "assembly") {
+      colorMap["taskNode"].push_back(osg::Vec4(0.986, 0.752, 0.990, 1.0));
+      colorMap["taskNode"].push_back(osg::Vec4(0.842, 0.349, 0.850, 1.0));
+      colorMap["taskNodeSelected"].push_back(osg::Vec4(0.954, 0.605, 0.960, 1.0));
+      colorMap["taskNodeSelected"].push_back(osg::Vec4(0.954, 0.605, 0.960, 1.0));
+    }
     else if(domain == "electronics") {
       colorMap["taskNode"].push_back(osg::Vec4(0.85, .92, 1., 1.0));
       colorMap["taskNode"].push_back(osg::Vec4(0.3, 0.3, 0.5, 1.0));
@@ -95,10 +100,10 @@ namespace osg_graph_viz {
       colorMap["taskNodeSelected"].push_back(osg::Vec4(0.95, 0.8, 0.5, 1.0));
     }
     else if(domain == "behavior") {
-      colorMap["taskNode"].push_back(osg::Vec4(1.0, .8, 0.8, 1.0));
-      colorMap["taskNode"].push_back(osg::Vec4(0.5, 0.3, 0.3, 1.0));
-      colorMap["taskNodeSelected"].push_back(osg::Vec4(1.0, 0.6, 0.6, 1.0));
-      colorMap["taskNodeSelected"].push_back(osg::Vec4(1.0, 0.6, 0.6, 1.0));
+      colorMap["taskNode"].push_back(osg::Vec4(0.876, 0.760, 1.00, 1.0));
+      colorMap["taskNode"].push_back(osg::Vec4(0.783, 0.380, 1.00, 1.0));
+      colorMap["taskNodeSelected"].push_back(osg::Vec4(0.834, 0.544, 0.99, 1.0));
+      colorMap["taskNodeSelected"].push_back(osg::Vec4(0.834, 0.544, 0.99, 1.0));
     }
     else if(domain == "computation") {
       colorMap["taskNode"].push_back(osg::Vec4(1.0, .8, 0.8, 1.0));
