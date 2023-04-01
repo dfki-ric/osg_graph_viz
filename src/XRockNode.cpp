@@ -143,15 +143,31 @@ namespace osg_graph_viz {
     nodeName->setBackgroundColor(osg_text::Color(0.0, 0.0, 0.0, 0.0));
     pos->addChild((osg::Node*)nodeName->getOSGNode());
     //c.r = c.g = c.b =0.3;
+    auto type_posy = namePosY-headerFontSize*1.66;
     nodeType = new osg_text::Text((std::string)info.map["type"], headerFontSize, c,
-                                  namePosX, namePosY-headerFontSize*1.66, align, 0, 0, 0, 0,
+                                  namePosX, type_posy, align, 0, 0, 0, 0,
                                   osg_text::Color(), osg_text::Color(),
                                   0, view->getResourcesPath()+"/fonts/stilu/Stilu-Light.ttf");
     nodeType->setBackgroundColor(osg_text::Color(0.0, 0.0, 0.0, 0.0));
     pos->addChild((osg::Node*)nodeType->getOSGNode());
+    double offset_y = 0.0;
+    for(auto& abstract : info.map["model"]["abstracts"])
+    {
+      double y = type_posy * 1.5 + offset_y;
+      //std::cout <<  "what is this "<< info.map["model"]["abstracts"][0]["name"].toJsonString() << std::endl;
+      auto nodeAbstract = new osg_text::Text((std::string)abstract["name"], headerFontSize, osg_text::Color(0.198, 0.210, 0.900,1),
+                                  namePosX, y, align, 0, 0, 0, 0,
+                                  osg_text::Color(0.141, 0.274, 0.940,1), osg_text::Color(),
+                                0, view->getResourcesPath()+"/fonts/stilu/Stilu-Light.ttf");
+      portStartY -= 10.0;
+      offset_y -= 10.0;
+      nodeAbstract->setBackgroundColor(osg_text::Color(0.0, 0.0, 0.0, 0.0));
+      pos->addChild((osg::Node*)nodeAbstract->getOSGNode());
+    }
+
 
     initRoundBody();
-    frameUniform->set(osg::Vec3f(2, 15, 0));
+    frameUniform->set(osg::Vec3f(2, 20, 0));
     handlePorts();
     Node::resizeWidth();
     handlePorts(true);
@@ -627,7 +643,10 @@ namespace osg_graph_viz {
       h2 = headerHeight + portSpaceY*(maxPorts);
     }
     else {
-      h2 = portSpaceY*(maxPorts-1)+headerHeight+mergeIconSize*6+3;
+       if(info.map["model"].hasKey("abstracts") && info.map["model"]["abstracts"].size() > 0)
+          h2 = (10.0 * info.map["model"]["abstracts"].size()) + portSpaceY*(maxPorts-1)+headerHeight+mergeIconSize*6+3;
+       else
+          h2 = portSpaceY*(maxPorts-1)+headerHeight+mergeIconSize*6+3;
     }
     if(h2 > h) h = h2;
     height = h;
