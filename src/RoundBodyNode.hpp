@@ -15,16 +15,16 @@ namespace osg_graph_viz {
   class RoundBodyNode : public Node {
 
   public:
-    RoundBodyNode(View *v);
+    explicit RoundBodyNode(View *v);
     RoundBodyNode(const NodeInfo &info, View *v);
     virtual ~RoundBodyNode();
 
     void initRoundBody();
-    void setRenderOrder(int o);
-    virtual void setSelected(bool s);
+    void setRenderOrder(int o) override;
+    virtual void setSelected(bool s) override;
     void applyColor();
-    void exportSvg(FILE *f, double ol, double ot);
-    void getRectangle(double *x1, double *x2, double *y1, double *y2);
+    void exportSvg(FILE *f, double ol, double ot) override;
+    void getRectangle(double *x1, double *x2, double *y1, double *y2) override;
 
   protected:
     osg::ref_ptr<osg::Uniform> sizeUniform, frameUniform, bodyColorUniform, frameColorUniform;
@@ -33,9 +33,9 @@ namespace osg_graph_viz {
     double frameY, frameX, sizeOffset;
     
     osg::Geode* createBody(double w, double h, double x, double y,
-                           std::string textureFile, bool gardientHeader=false);
-    virtual void resizeHeight(double w);
-    virtual void resizeWidth(double h);
+                           std::string textureFile, bool gardientHeader=false) override;
+    virtual void resizeHeight(double w) override;
+    virtual void resizeWidth(double h) override;
   };
 
 } // end of namespace: osg_graph_viz
