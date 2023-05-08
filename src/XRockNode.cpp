@@ -170,26 +170,31 @@ namespace osg_graph_viz {
     std::string domainData = (std::string)(info.map["domain"])+ "Data";
     std::string name = (std::string)info.map["inputs"][i]["name"];
     ConfigMap *map = &info.map;
-    if((*map).hasKey(domainData)) {
-      map = info.map[domainData];
-      if((*map).hasKey("data")) {
-        map = (*map)["data"];
-        if((*map).hasKey("configuration")) {
-          map = (*map)["configuration"];
-          if((*map).hasKey("interfaces")) {
-            map = (*map)["interfaces"];
-            if((*map).hasKey(name)) {
-              map = (*map)[name];
-              if((*map).hasKey("bias")) {
-                *bias << (*map)["bias"];
-                *def << (*map)["default"];
-                *merge << (*map)["merge"];
-                return true;
-              }
+    if((*map).hasKey("configuration"))
+    {
+        map = (*map)["configuration"];
+        if((*map).hasKey("data"))
+        {
+            if(!(*map)["data"].isMap()) {
+                fprintf(stderr, "no config data map\t%s\n", info.map.toYamlString().c_str());
             }
-          }
+            map = (*map)["data"];
+            if((*map).hasKey("interfaces"))
+            {
+                map = (*map)["interfaces"];
+                if((*map).hasKey(name))
+                {
+                    map = (*map)[name];
+                    if((*map).hasKey("bias"))
+                    {
+                        *bias << (*map)["bias"];
+                        *def << (*map)["default"];
+                        *merge << (*map)["merge"];
+                        return true;
+                    }
+                }
+            }
         }
-      }
     }
     return false;
   }
