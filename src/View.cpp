@@ -1453,6 +1453,9 @@ namespace osg_graph_viz {
       return;
     }
 
+    int paste_offset_x = 0;
+    int paste_offset_y = 0;
+    bool set_paste_offset = true;
     // clear selection
     for(std::list<osg::ref_ptr<osg_graph_viz::Node> >::iterator it = nodeList.begin(); it != nodeList.end(); ++it){
       if((*it)->isSelected()) {
@@ -1460,7 +1463,15 @@ namespace osg_graph_viz {
         selectedNode = NULL;
       }
     }
+    double posX_ = (mouseX*1920 - posX) / scale;
+    double posY_ = (mouseY*1080 - posY) / (scale*scaleRatio);
     for(auto node: bufferMap["nodes"]) {
+      if(set_paste_offset) {
+        paste_offset_x = posX_ - (double)node["pos"]["x"];
+        paste_offset_y = posY_ - (double)node["pos"]["y"];
+        fprintf(stderr, "paste_offset: %g %g - %d %d\n", posX_, posY_, paste_offset_x, paste_offset_y);
+        set_paste_offset = false;
+      }
       if((newNode = ui->addNode(node))) {
         ConfigMap m2 = newNode->getMap();
         node["id"] = m2["id"];
@@ -1468,6 +1479,8 @@ namespace osg_graph_viz {
         nameMapping[node["name"]] = newNode->getName();
         newSelection.push_back(newNode);
         node["name"] = newNode->getName();
+        node["pos"]["x"] = (double)node["pos"]["x"] + paste_offset_x;
+        node["pos"]["y"] = (double)node["pos"]["y"] + paste_offset_y;
         newNode->updateMap(node);
       }
     }
