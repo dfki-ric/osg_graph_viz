@@ -1199,7 +1199,10 @@ namespace osg_graph_viz {
         if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Delete) {
           deleteKey();
         }
-        if(ea.getModKeyMask() == osgGA::GUIEventAdapter::MODKEY_SHIFT) {
+        if (ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_SHIFT or
+            ea.getKey() == osgGA::GUIEventAdapter::KEY_Shift_L or
+            ea.getKey() == osgGA::GUIEventAdapter::KEY_Shift_R)
+        {
           setModKey(false);
         }
         if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape) {
