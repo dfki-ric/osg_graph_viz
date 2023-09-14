@@ -112,6 +112,7 @@ namespace osg_graph_viz {
                                  FILE *f, double ol, double ot);
     static std::string getColor(const osg::Vec4 &c);
     static std::string getColor(const osg_text::Color &c);
+    void handleNodeTooltips(double mouseX, double mouseY);
 
   private:
     std::map<std::string, int> filterMap;

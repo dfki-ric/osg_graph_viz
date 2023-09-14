@@ -317,6 +317,32 @@ namespace osg_graph_viz {
     *x = p.x() - 1920*0.5;
     *y = p.y() - 1080*0.5;
   }
+  void View::handleNodeTooltips(double mouseX, double mouseY)
+  {
+    // handle abstracts tooltip on hover over node name or ports
+    for (auto it = nodeList.begin(); it != nodeList.end(); ++it)
+    {
+      // if node has no abstracts, skip it
+      if (!(*it)->info.map["model"].hasKey("abstracts"))
+        continue;
+      if ((*it)->info.map["model"]["abstracts"].size() < 1)
+        continue;
+
+      // check hover on node name
+      double nodeNameX, nodeNameY, left, right, top, down;
+      (*it)->getPosition(&nodeNameX, &nodeNameY);
+      (*it)->nodeName->getRectangle(&left, &right, &top, &down);
+
+      nodeNameX = (*it)->posX + nodeNameX;
+      nodeNameY = (*it)->posY + nodeNameY;
+      if (mouseX >= nodeNameX && mouseY <= nodeNameY && mouseX < nodeNameX + right && mouseY > nodeNameY + down)
+      {
+        // if(isPointInRect(mouseX, mouseY, nodeNameX, nodeNameY, right, down))
+        //{
+        std::cout << "Mouse on node name" << (*it)->nodeName->getName() << std::endl;
+      }
+    }
+  }
 
   void View::mouseMove(double x, double y, int scaleX, int scaleY) {
     char da[255];
@@ -331,6 +357,186 @@ namespace osg_graph_viz {
     sprintf(da, "mouse [%g, %g] [%g, %g] --- moved %d", x, y, cPosX, cPosY, mouseMask);
 
     infoText->setText(da);
+    // handle abstracts tooltip on hover over node name or ports
+    for (auto it = nodeList.begin(); it != nodeList.end(); ++it)
+    {
+      // if node has no abstracts, skip it
+      if (!(*it)->info.map["model"].hasKey("abstracts"))
+        continue;
+      if ((*it)->info.map["model"]["abstracts"].size() < 1)
+        continue;
+
+      // check hover on node name
+      double nodeNameX, nodeNameY, left, right, top, down;
+      (*it)->nodeName->getPosition(&nodeNameX, &nodeNameY);
+      (*it)->nodeName->getRectangle(&left, &right, &top, &down);
+
+      nodeNameX = (*it)->posX + nodeNameX;
+      nodeNameY = (*it)->posY + nodeNameY;
+      // if mouse position lays within nodeName, show a tooltip which displays all abstract names this model have implemented.
+      if (cPosX >= nodeNameX && cPosY <= nodeNameY && cPosX < nodeNameX + right && cPosY > nodeNameY + down)
+      {
+        const double x = 130.0;
+        const double y = -0.5 * (*it)->headerFontSize + (*it)->headerFontSize * 2.5 + (*it)->info.map["model"]["abstracts"].size() * (*it)->headerFontSize;
+        std::string abstract_names = "";
+        for (auto &abstract : (*it)->info.map["model"]["abstracts"])
+          abstract_names += (std::string)abstract["name"] + '\n';
+        dynamic_cast<XRockNode *>((*it).get())->showTooltip((*it)->getName(), x, y, abstract_names);
+      }
+      else
+      {
+        dynamic_cast<XRockNode *>((*it).get())->hideTooltip((*it)->getName());
+      }
+
+      // check hover on inputs
+      for (const auto &in_port : (*it)->inPorts)
+      {
+
+        double vX, vY;
+        if ((*it)->checkMouseInPortHover(cPosX, cPosY, &vX, &vY, in_port))
+        {
+
+          // if mouse position lays within port's name
+          std::string text = "";
+          std::string interface_name = in_port->labels[0]->getText(); // example: motion_control
+          std::string interface_type = in_port->labels[1]->getText(); // example: ::Joints3d::
+          // find the right realization
+          for (auto &abstract : (*it)->info.map["model"]["abstracts"])
+          {
+            std::string abstract_model_name = abstract["name"];
+
+            for (auto &ioa : (*it)->info.map["model"]["interfaces_of_abstracts"])
+            {
+              if (ioa["abstract_model_name"] == abstract_model_name)
+              {
+                // std::string abstract_interface_uri = ioa["abstract_interface_uri"];
+                std::string abstract_interface_name = ioa["abstract_interface_name"];
+                std::string abstract_interface_type = ioa["abstract_interface_type"];
+                std::string abstract_interface_direction = ioa["abstract_interface_direction"];
+                if (abstract_interface_direction == "INCOMING" &&
+                    interface_type == abstract_interface_type)
+                {
+                  // todo: type match is not enough, how to find the right realization by type & ?
+                  //  cannot be name since it can be changed
+                  //  maybe we can export interface uri, and try build a uri here and match with it
+                  text += abstract_model_name + "::" + abstract_interface_name + '\n';
+                }
+
+                // TODO: how to display the realized abstract_model_name/abstract_interface_name?
+              }
+            }
+          }
+
+          if (!text.empty())
+          {
+            double portNameX, portNameY, left, right, top, down;
+            in_port->labels[0]->getPosition(&portNameX, &portNameY);
+            in_port->labels[0]->getRectangle(&left, &right, &top, &down);
+            // double portNameXAbs = (*it)->posX + portNameX;
+            // double portNameYAbs = (*it)->posY + portNameY;
+            // double x = portNameX + right + 50.0;
+            // double y = portNameY - (down - top) / 2.0;
+
+            double tooltipX = portNameX - 10.0 - (text.size()) - (text.size() / 2);
+            double tooltipY = portNameY;
+            dynamic_cast<XRockNode *>((*it).get())->showTooltip(in_port->labels[0]->getText(), tooltipX, tooltipY, text);
+          }
+        }
+        else
+        {
+          dynamic_cast<XRockNode *>((*it).get())->hideTooltip(in_port->labels[0]->getText());
+        }
+      }
+
+      // check hover on outputs
+      for (const auto &out_port : (*it)->outPorts)
+      {
+
+        double vX, vY;
+        if ((*it)->checkMouseOutPortHover(cPosX, cPosY, &vX, &vY, out_port))
+        {
+          std::string text = "";
+          std::string interface_name = out_port->labels[0]->getText(); // example: motion_control
+          std::string interface_type = out_port->labels[1]->getText(); // example: ::Joints3d::
+
+          // find the right realization
+          for (auto &abstract : (*it)->info.map["model"]["abstracts"])
+          {
+            std::string abstract_model_name = abstract["name"];
+
+            for (auto &ioa : (*it)->info.map["model"]["interfaces_of_abstracts"])
+            {
+              if (ioa["abstract_model_name"] == abstract_model_name)
+              {
+                // std::string abstract_interface_uri = ioa["abstract_interface_uri"];
+                std::string abstract_interface_name = ioa["abstract_interface_name"];
+                std::string abstract_interface_type = ioa["abstract_interface_type"];
+                std::string abstract_interface_direction = ioa["abstract_interface_direction"];
+                if (abstract_interface_direction == "OUTGOING" &&
+                    interface_type == abstract_interface_type)
+                {
+                  // todo: type match is not enough, how to find the right realization by type & ?
+                  //  cannot be name since it can be changed
+                  //  maybe we can export interface uri, and try build a uri here and match with it
+                  text += abstract_model_name + "::" + abstract_interface_name + '\n';
+                }
+
+                // TODO: how to display the realized abstract_model_name/abstract_interface_name?
+              }
+            }
+          }
+
+          if (!text.empty())
+          {
+            double oportNameX, oportNameY, oleft, oright, otop, odown;
+            out_port->labels[0]->getPosition(&oportNameX, &oportNameY);
+            out_port->labels[0]->getRectangle(&oleft, &oright, &otop, &odown);
+            // double oportNameXAbs = (*it)->posX + oportNameX;
+            // double oportNameYAbs = (*it)->posY + oportNameY;
+            double tooltipX = oportNameX + oright * 0.55;
+            double tooltipY = oportNameY;
+            dynamic_cast<XRockNode *>((*it).get())->showTooltip(out_port->labels[0]->getText(), tooltipX, tooltipY, text);
+          }
+        }
+        else
+        {
+          dynamic_cast<XRockNode *>((*it).get())->hideTooltip(out_port->labels[0]->getText());
+        }
+      }
+      /*
+      for(const auto& out_port : (*it)->outPorts) {
+        double portNameX, portNameY, left, right, top, down;
+        out_port->labels[0]->getPosition(&portNameX, &portNameY);
+        out_port->labels[0]->getRectangle(&left, &right, &top, &down);
+        double portNameXAbs = (*it)->posX + portNameX - out_port->width;
+        double portNameYAbs = (*it)->posY + portNameY;
+
+        // if mouse position lays within port's name
+        if (cPosX >= portNameXAbs && cPosY <= portNameYAbs && cPosX < portNameXAbs + right && cPosY > portNameYAbs - 20.0) {
+         std::string text = "outport";
+          const double x = portNameX + 45.0;
+          const double y = portNameY;
+          #define print(x) std::cout << #x << ": " << x << std::endl;
+
+          print(portNameXAbs)
+          print(portNameYAbs)
+          print(portNameX)
+          print(portNameY)
+          print(x)
+          print(y)
+          print(top)
+          print(right)
+          print(down)
+          print(left)
+          dynamic_cast<XRockNode*>((*it).get())->showTooltip(out_port->labels[0]->getText(), x, y, text);
+        } else {
+          dynamic_cast<XRockNode*>((*it).get())->hideTooltip(out_port->labels[0]->getText());
+          //dynamic_cast<XRockNode*>((*it).get())->hideAbstractsTooltip();
+        }
+      }
+      */
+    }
+
     // handling of middle mouse button for scaling
     if(mouseMask & 1<<1) {
       scaleView(scale + scale_y*scaleY*0.05*(y-mouseY), x, y);

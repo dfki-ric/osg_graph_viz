@@ -8,6 +8,9 @@
 #define OSG_GRAPH_VIZ_XROCK_NODE_HPP
 
 #include "RoundBodyNode.hpp"
+#include <mars/osg_text/Text.h>
+#include <memory>
+#include <map>
 
 namespace osg_graph_viz {
 
@@ -38,7 +41,40 @@ namespace osg_graph_viz {
     void applyFontScale(double s);
     void exportSvg(FILE *f, double ol, double ot);
 
+    struct Tooltip
+    {
+      osg::ref_ptr<osg::Group> root;
+      osg::ref_ptr<osg_text::Text> textDrawable;
+      osg_text::Color backgroundColor{0.20, 0.20, 0.20, 1.0};
+      osg_text::Color textColor{1.0, 1.0, 1.0, 1};
+      Tooltip(View *view, const std::string &text, double x, double y)
+      {
+        root = new osg::Group;
+        textDrawable = new osg_text::Text(text, view->headerFontSize, textColor,
+                                          x, y,
+                                          osg_text::TextAlign::ALIGN_CENTER, 6, 6, 6, 6,
+                                          backgroundColor, osg_text::Color(), 0.0,
+                                          view->getResourcesPath() + "/fonts/stilu/Stilu-SemiBold.ttf");
+        root->addChild((osg::Node *)textDrawable->getOSGNode());
+      }
+    };
+
+    void showTooltip(const std::string &key, double x, double y, const std::string &text)
+    {
+      if (tooltips.count(key))
+        return;
+      tooltips[key].reset(new Tooltip(view, text, x, y));
+      pos->addChild(tooltips[key]->root);
+    }
+    void hideTooltip(const std::string &key)
+    {
+      if (!tooltips.count(key))
+        return;
+      pos->removeChild(tooltips[key]->root);
+      tooltips.erase(key);
+    }
   protected:
+    std::map<std::string, std::unique_ptr<Tooltip>> tooltips;
     std::vector<Frame> frames;
     osg::ref_ptr<osg_text::Text> nodeType;
 
