@@ -89,6 +89,8 @@ namespace osg_graph_viz {
     virtual void addOutputEdge(int index, Edge* edge);
     virtual void setRenderOrder(int o);
     virtual void setLineWidth(double w);
+    virtual bool checkMouseInPortHover(double x, double y, double *vX, double *vY, Port *p);
+    virtual bool checkMouseOutPortHover(double x, double y, double *vX, double *vY, Port *p);
     virtual bool checkMouseInPortPress(double x, double y,
                                        double *vX, double *vY, int *idx);
     virtual bool checkMouseOutPortPress(double x, double y,

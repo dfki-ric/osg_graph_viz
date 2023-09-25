@@ -1068,6 +1068,73 @@ namespace osg_graph_viz {
     }
     return false;
   }
+  bool Node::checkMouseInPortHover(double x, double y, double *vX, double *vY, Port *p)
+  {
+    if (hidden)
+      return false;
+    convertPos(&x, &y);
+    if (ignoreNextInPort)
+    {
+      ignoreNextInPort = false;
+      return false;
+    }
+
+    if (p->hidden)
+    {
+      return false;
+    }
+    double iconPosY = portStartY - portSpaceY * (p->portPos);
+    fprintf(stderr, "hover check: %g-%g / %g-%g\n", posX - mergeIconSize / 2.0, posX + mergeIconSize / 2.0, posY + iconPosY - mergeIconSize / 2.0, posY + iconPosY + mergeIconSize / 2.0);
+    if (x > posX - (portScale * mergeIconSize) / 2.0 && x < posX + (portScale * mergeIconSize) / 2.0)
+    {
+      if (y > posY + iconPosY - (portScale * mergeIconSize) / 2.0 &&
+          y < posY + iconPosY + (portScale * mergeIconSize) / 2.0)
+      {
+        *vX = posX - (portScale * mergeIconSize) / 2.0;
+        *vY = posY + iconPosY;
+        convertPosToWorld(vX, vY);
+        convertPosToWorld(vX, vY);
+        return true;
+      }
+    }
+    double x1, x2, y1, y2, y3;
+    if (p->frame.defined)
+    {
+      x1 = p->frame.x;
+      x2 = x1 + p->frame.w;
+      y2 = p->frame.y;
+      y1 = y2 + p->frame.h;
+    }
+    else
+    {
+      double w2 = 0;
+      double w4;
+      for (size_t n = 0; n < p->labels.size(); ++n)
+      {
+        p->labels[n]->getRectangle(&x1, &x2, &y1, &y2);
+        w4 = x2 - x1;
+        if (w4 > w2)
+          w2 = w4;
+        if (n == 0)
+          y3 = y1;
+      }
+      y1 = y3;
+      x2 = x1 + w2;
+    }
+    x1 += posX;
+    x2 += posX;
+    y1 += posY;
+    y2 += posY;
+    if (x > x1 && x < x2 && y > y2 && y < y1)
+    {
+      fprintf(stderr, "hover in port\n");
+      *vX = posX - (portScale * mergeIconSize) / 2.0;
+      *vY = posY + iconPosY;
+      convertPosToWorld(vX, vY);
+      return true;
+    }
+    return false;
+  }
 
   bool Node::checkMouseInPortPress(double x, double y,
                                    double *vX, double *vY, int *idx) {
@@ -1128,7 +1195,76 @@ namespace osg_graph_viz {
       }
     }
     return false;
+  }
 
+  bool Node::checkMouseOutPortHover(double x, double y, double *vX, double *vY, Port *p)
+  {
+    if (hidden)
+      return false;
+    convertPos(&x, &y);
+    if (ignoreNextOutPort)
+    {
+      ignoreNextOutPort = false;
+      return false;
+    }
+    if (p->hidden)
+    {
+      return false;
+    }
+    if (p->foldState == 0)
+    {
+      double iconPosY = portStartY - portSpaceY * (p->portPos);
+      fprintf(stderr, "out hover check: %g-%g / %g-%g\n", posX + width - mergeIconSize / 2.0, posX + width + mergeIconSize / 2.0, posY + iconPosY - mergeIconSize / 2.0, posY + iconPosY + mergeIconSize / 2.0);
+      if (x > posX + width - (portScale * mergeIconSize) / 2.0 && x < posX + width + (portScale * mergeIconSize) / 2.0)
+      {
+        if (y > posY + iconPosY - (portScale * mergeIconSize) / 2.0 &&
+            y < posY + iconPosY + (portScale * mergeIconSize) / 2.0)
+        {
+          *vX = posX + width - (portScale * mergeIconSize) / 2.0;
+          *vY = posY + iconPosY;
+          fprintf(stderr, "hover out port\n");
+          return true;
+        }
+      }
+      double x1, x2, y1, y2, y3;
+      if (p->frame.defined)
+      {
+        x1 = p->frame.x;
+        x2 = x1 + p->frame.w;
+        y2 = p->frame.y;
+        y1 = y2 + p->frame.h;
+      }
+      else
+      {
+        double w2 = 0;
+        double w4;
+        for (size_t n = 0; n < p->labels.size(); ++n)
+        {
+          p->labels[n]->getRectangle(&x1, &x2, &y1, &y2);
+          w4 = x2 - x1;
+          if (w4 > w2)
+            w2 = w4;
+          if (n == 0)
+            y3 = y1;
+        }
+        y1 = y3;
+        x1 = x2 - w2;
+      }
+      x1 += posX;
+      x2 += posX;
+      y1 += posY;
+      y2 += posY;
+      if (x > x1 && x < x2 && y > y2 && y < y1)
+      {
+        fprintf(stderr, "hover out port\n");
+        *vX = posX - (portScale * mergeIconSize) / 2.0;
+        *vY = posY + iconPosY;
+        convertPosToWorld(vX, vY);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   bool Node::checkMouseOutPortPress(double x, double y,
