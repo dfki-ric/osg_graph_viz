@@ -1947,8 +1947,8 @@ namespace osg_graph_viz {
       if(!merge.empty()) {
         fprintf(f, "    <text xml:space=\"preserve\" style=\"font-style:normal;font-weight:normal;font-size:%gpx;line-height:125%%;font-family:Stilu;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" x=\"%g\" y=\"%g\" id=\"merge_%s\">\n", pm, x2, y2, linkname.c_str());
         fprintf(f, "      <tspan id=\"mergetext_%s\" x=\"%g\" y=\"%g\" style=\"font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:%gpx;font-family:'Stilu';-inkscape-font-specification:'Stilu';text-align:center;text-anchor:middle\"%s>%s</tspan>\n    </text>\n", linkname.c_str(), x2, y2, size, rotate.c_str(), merge.c_str());
-      ++i;
       }
+      ++i;
     }
 
     i=0;
