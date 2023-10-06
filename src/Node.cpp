@@ -1812,6 +1812,12 @@ namespace osg_graph_viz {
   std::string Node::getName() {
     return (std::string)info.map["name"];
   }
+  std::string Node::getAlias()
+  {
+    if(info.map.hasKey("alias"))
+      return (std::string)info.map["alias"];
+    return "";
+  }
 
   bool Node::isInput() {
     return (std::string)info.map["type"] == "INPUT";
@@ -1912,7 +1918,8 @@ namespace osg_graph_viz {
     // todo: handle fold state
     for(auto it: inPorts) {
       double portPosY = portStartY - portSpaceY*(i);
-      std::string linkname = replaceString(name, ">", "gt_");
+      std::string linkname = replaceString(name, ">", "&gt;");
+      linkname = replaceString(name, "<", "&lt;");
       fprintf(f, "    <rect ry=\"2.873735\" x=\"%g\" y=\"%g\" height=\"%g\" width=\"%g\" id=\"%s_in_%d\" style=\"opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1\" />\n", -pm*0.5+ol, -(portPosY+pm*0.5)+ot, pm, pm, linkname.c_str(), i);
       for(auto label: it->labels) {
         View::exportLabelToSvg(label, f, ol, ot);
@@ -1947,15 +1954,16 @@ namespace osg_graph_viz {
       if(!merge.empty()) {
         fprintf(f, "    <text xml:space=\"preserve\" style=\"font-style:normal;font-weight:normal;font-size:%gpx;line-height:125%%;font-family:Stilu;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" x=\"%g\" y=\"%g\" id=\"merge_%s\">\n", pm, x2, y2, linkname.c_str());
         fprintf(f, "      <tspan id=\"mergetext_%s\" x=\"%g\" y=\"%g\" style=\"font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:%gpx;font-family:'Stilu';-inkscape-font-specification:'Stilu';text-align:center;text-anchor:middle\"%s>%s</tspan>\n    </text>\n", linkname.c_str(), x2, y2, size, rotate.c_str(), merge.c_str());
-      ++i;
+     
       }
+      ++i;
     }
 
     i=0;
     // todo: handle fold state
     for(auto it: outPorts) {
       double portPosY = portStartY - portSpaceY*(i);
-      std::string linkname = replaceString(name, ">", "gt_");
+      std::string linkname = replaceString(name, ">", "&gt;");
       fprintf(f, "    <rect ry=\"2.873735\" x=\"%g\" y=\"%g\" height=\"%g\" width=\"%g\" id=\"%s_out_%d\" style=\"opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1\" />\n", width-pm*0.5+ol, -(portPosY+pm*0.5)+ot, pm, pm, linkname.c_str(), i);
       ++i;
       for(auto label: it->labels) {

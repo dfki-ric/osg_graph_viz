@@ -1773,49 +1773,76 @@ namespace osg_graph_viz {
     fclose(f);
   }
 
-
+  std::string replaceStr(const std::string &source, const std::string &s1,
+                         const std::string &s2)
+  {
+    std::string back = source;
+    size_t found = back.find(s1);
+    while (found != std::string::npos)
+    {
+      back.replace(found, s1.size(), s2);
+      found = back.find(s1, found + s2.size());
+    }
+    return back;
+  }
   void View::exportLabelToSvg(osg::ref_ptr<osg_text::Text> label,
-                                     FILE *f, double ol, double ot) {
-    double l, r, t, b, x2, y2, pl, pt, pr, pb;
-    double fz = label->getFontsize()*0.95;
-    label->getRectangle(&l, &r, &t, &b);
-    label->getPosition(&x2, &y2);
-    label->getPadding(&pl, &pt, &pr, &pb);
-    std::string font = label->getFont();
-    std::string weight = "normal";
-    if(font.find("bold") != std::string::npos) {
-      weight = "600";
-    }
-    osg_text::Color backC = label->getBackgroundColor();
-    osg_text::Color borderC = label->getBorderColor();
-    double borderW = label->getBorderWidth()*0.2;
-    int borderO = 0;
-    int backO = 0;
-    if(backC.a > 0.0001) backO = 1;
-    if(borderW > 0) borderO = 1;
-    x2 = ol+r-pr;
-    y2 = ot-t+pt+fz*0.8;
+                              FILE *f, double ol, double ot)
+  {
+    double l, r, t, b, x2, y2, pl, pt, pr, pb, fz;
+    if (label)
+    {
+      fz = label->getFontsize() * 0.95;
 
-    if(backO + borderO > 0) {
-      fprintf(f, "    <rect style=\"opacity:1;fill:#%s;fill-opacity:%d;fill-rule:nonzero;stroke:#%s;stroke-width:%g;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:%d\" id=\"labelback_%lu\" width=\"%g\" height=\"%g\" x=\"%g\" y=\"%g\" ry=\"0\" />\n", View::getColor(backC).c_str(), backO, View::getColor(borderC).c_str(), borderW, borderO, labelID, r-l, t-b, l+ol, ot-t);
-    }
+      label->getRectangle(&l, &r, &t, &b);
+      label->getPosition(&x2, &y2);
+      label->getPadding(&pl, &pt, &pr, &pb);
+      std::string font = label->getFont();
+      std::string weight = "normal";
 
-    fprintf(f, "    <text xml:space=\"preserve\" style=\"font-style:normal;font-weight:%s;font-size:10px;line-height:125%%;font-family:Stilu;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" x=\"%g\" y=\"%g\" id=\"label_%lu\">\n", weight.c_str(), x2, y2, labelID);
-    osg_text::TextAlign align = label->getAlign();
-    std::string a1 = "end";
-    std::string a2 = "end";
-    if(align == osg_text::ALIGN_LEFT) {
-      x2 = ol+l+pr;
-      a1 = "start";
-      a2 = "start";
+      if (font.find("bold") != std::string::npos || font.find("Bold") != std::string::npos)
+      {
+        weight = "600";
+      }
+      osg_text::Color backC = label->getBackgroundColor();
+      osg_text::Color borderC = label->getBorderColor();
+      double borderW = label->getBorderWidth() * 0.2;
+      int borderO = 0;
+      int backO = 0;
+      if (backC.a > 0.0001)
+        backO = 1;
+      if (borderW > 0)
+        borderO = 1;
+      x2 = ol + l + pl;
+      y2 = ot - t + pt + fz * 0.8;
+
+      if (backO + borderO > 0)
+      {
+        fprintf(f, "    <rect style=\"opacity:1;fill:#%s;fill-opacity:%d;fill-rule:nonzero;stroke:#%s;stroke-width:%g;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:%d\" id=\"labelback_%lu\" width=\"%g\" height=\"%g\" x=\"%g\" y=\"%g\" ry=\"0\" />\n", View::getColor(backC).c_str(), backO, View::getColor(borderC).c_str(), borderW, borderO, labelID, r - l, t - b, l + ol, ot - t);
+      }
+
+      fprintf(f, "    <text xml:space=\"preserve\" style=\"font-style:normal;font-weight:%s;font-size:10px;line-height:125%%;font-family:Stilu;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" x=\"%g\" y=\"%g\" id=\"label_%lu\">\n", weight.c_str(), x2, y2, labelID);
+      osg_text::TextAlign align = label->getAlign();
+      std::string a1 = "end";
+      std::string a2 = "end";
+      if (align == osg_text::ALIGN_LEFT)
+      {
+        x2 = ol + l + pr;
+        a1 = "start";
+        a2 = "start";
+      }
+      else if (align == osg_text::ALIGN_CENTER)
+      {
+        x2 = ol + l + (r - l) * 0.5;
+        a1 = "center";
+        a2 = "middle";
+      }
+      std::string text = label->getText();
+      text = replaceStr(text, ">", "&gt;");
+      text = replaceStr(text, "<", "&lt;");
+
+      fprintf(f, "      <tspan id=\"labeltext_%lu\" x=\"%g\" y=\"%g\" style=\"font-style:normal;font-variant:normal;font-weight:%s;font-stretch:normal;font-size:%gpx;font-family:'Stilu';-inkscape-font-specification:'Stilu';text-align:%s;text-anchor:%s\">%s</tspan>\n    </text>\n", labelID, x2, y2, weight.c_str(), fz, a1.c_str(), a2.c_str(), text.c_str());
+      ++labelID;
     }
-    else if(align == osg_text::ALIGN_CENTER) {
-      x2 = ol+l+(r-l)*0.5;
-      a1 = "center";
-      a2 = "middle";
-    }
-    fprintf(f, "      <tspan id=\"labeltext_%lu\" x=\"%g\" y=\"%g\" style=\"font-style:normal;font-variant:normal;font-weight:%s;font-stretch:normal;font-size:%gpx;font-family:'Stilu';-inkscape-font-specification:'Stilu';text-align:%s;text-anchor:%s\">%s</tspan>\n    </text>\n", labelID, x2, y2, weight.c_str(), fz, a1.c_str(), a2.c_str(), label->getText().c_str());
-    ++labelID;
   }
 
 } // end of namespace: osg_graph_viz

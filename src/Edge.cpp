@@ -913,17 +913,25 @@ namespace osg_graph_viz {
     info["smooth"] = smooth;
   }
 
-  void Edge::exportSvg(FILE *f, double ol, double ot) {
-    std::string toName = endNode->getName();
-    std::string fromName = startNode->getName();
+  void Edge::exportSvg(FILE *f, double ol, double ot)
+  {
+    std::string toName = endNode->getAlias();
+    if (toName.empty())
+      toName = endNode->getName();
+    std::string fromName = startNode->getAlias();
+    if (fromName.empty())
+      fromName = startNode->getName();
     char buffer[200];
     sprintf(buffer, "%s_out_%d", fromName.c_str(), fromIdx);
     std::string fromNodePort(buffer);
     sprintf(buffer, "%s_in_%d", toName.c_str(), toIdx);
     std::string toNodePort(buffer);
     std::string edgeName = info["id"].toString();
-    fromNodePort = replaceString(fromNodePort, ">", "gt_");
-    toNodePort = replaceString(toNodePort, ">", "gt_");
+
+    fromNodePort = replaceString(fromNodePort, ">", "&gt;");
+    toNodePort = replaceString(toNodePort, ">", "&gt;");
+    fromNodePort = replaceString(fromNodePort, "<", "&lt;");
+    toNodePort = replaceString(toNodePort, "<", "&lt;");
     double x1, x2, y1, y2;
     int n = vertices->size()-1;
     x1 = (*vertices.get())[0].x()-ol;
