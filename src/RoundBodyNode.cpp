@@ -206,9 +206,10 @@ namespace osg_graph_viz {
     y-=ot;
     fprintf(f, "  <g id=\"%s\" transform=\"translate(%g,%g)\">\n", name.c_str(), x, -y-.5*sizeOffset);
     double ry = 8;
-    if((std::string)info.map["type"] == "INPUT" ||
-       (std::string)info.map["type"] == "OUTPUT") {
-      ry = 6;;
+    if ((std::string)info.map["type"] == "INPUT" ||
+        (std::string)info.map["type"] == "OUTPUT")
+    {
+      ry = 6;
     }
     fprintf(f, "    <rect style=\"opacity:1;fill:#%s;fill-opacity:1;fill-rule:nonzero;stroke:#%s;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1\" id=\"frame2\" width=\"%g\" height=\"%g\" x=\"0\" y=\"0\" ry=\"%g\" />\n", View::getColor((*bColors.get())[0]).c_str(), View::getColor((*bColors.get())[1]).c_str(), width, height+sizeOffset, ry);
 

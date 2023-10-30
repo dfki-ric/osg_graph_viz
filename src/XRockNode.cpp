@@ -177,6 +177,7 @@ namespace osg_graph_viz {
         {
             if(!(*map)["data"].isMap()) {
                 fprintf(stderr, "no config data map\t%s\n", info.map.toYamlString().c_str());
+                return false;
             }
             map = (*map)["data"];
             if((*map).hasKey("interfaces"))

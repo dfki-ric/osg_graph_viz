@@ -110,6 +110,7 @@ namespace osg_graph_viz {
     virtual std::string getInPortName(int index);
     virtual std::string getOutPortName(int index);
     virtual std::string getName();
+    virtual std::string getAlias();
     virtual bool isInput();
     virtual bool isOutput();
     virtual void reposition();

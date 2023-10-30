@@ -1784,7 +1784,7 @@ namespace osg_graph_viz {
     label->getPadding(&pl, &pt, &pr, &pb);
     std::string font = label->getFont();
     std::string weight = "normal";
-    if(font.find("bold") != std::string::npos) {
+    if (font.find("bold") != std::string::npos || font.find("Bold") != std::string::npos){
       weight = "600";
     }
     osg_text::Color backC = label->getBackgroundColor();
