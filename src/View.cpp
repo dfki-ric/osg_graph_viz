@@ -1455,6 +1455,7 @@ namespace osg_graph_viz {
         {
           fprintf(stderr, "paste\n");
           pasteSelection();
+          repositionEdges();
           return true;
         }
         if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
@@ -1471,6 +1472,13 @@ namespace osg_graph_viz {
           redoPreviousAction();
           return true;
         }
+        if ((ea.getModKeyMask() & osgGA::GUIEventAdapter::MODKEY_CTRL) &&
+            (ea.getKey() == 'X' - 'A' + 1 || ea.getKey() == 'x' - 'a' + 1))
+        {
+          copySelection();
+          deleteKey();
+        }
+
         break;
       }
       default:
