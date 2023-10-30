@@ -113,6 +113,11 @@ namespace osg_graph_viz {
     static std::string getColor(const osg::Vec4 &c);
     static std::string getColor(const osg_text::Color &c);
     void handleNodeTooltips(double mouseX, double mouseY);
+    configmaps::ConfigMap getSelectedNodeMap() {
+      if(selectedNode)
+        return selectedNode->getMap();
+      return configmaps::ConfigMap();
+    }
 
   private:
     std::map<std::string, int> filterMap;
