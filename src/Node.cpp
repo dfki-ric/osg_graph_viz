@@ -1084,7 +1084,6 @@ namespace osg_graph_viz {
       return false;
     }
     double iconPosY = portStartY - portSpaceY * (p->portPos);
-    fprintf(stderr, "hover check: %g-%g / %g-%g\n", posX - mergeIconSize / 2.0, posX + mergeIconSize / 2.0, posY + iconPosY - mergeIconSize / 2.0, posY + iconPosY + mergeIconSize / 2.0);
     if (x > posX - (portScale * mergeIconSize) / 2.0 && x < posX + (portScale * mergeIconSize) / 2.0)
     {
       if (y > posY + iconPosY - (portScale * mergeIconSize) / 2.0 &&
@@ -1214,7 +1213,6 @@ namespace osg_graph_viz {
     if (p->foldState == 0)
     {
       double iconPosY = portStartY - portSpaceY * (p->portPos);
-      fprintf(stderr, "out hover check: %g-%g / %g-%g\n", posX + width - mergeIconSize / 2.0, posX + width + mergeIconSize / 2.0, posY + iconPosY - mergeIconSize / 2.0, posY + iconPosY + mergeIconSize / 2.0);
       if (x > posX + width - (portScale * mergeIconSize) / 2.0 && x < posX + width + (portScale * mergeIconSize) / 2.0)
       {
         if (y > posY + iconPosY - (portScale * mergeIconSize) / 2.0 &&
