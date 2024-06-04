@@ -14,7 +14,7 @@
 #include <osg/LineWidth>
 
 #include <configmaps/ConfigMap.hpp>
-#include <mars/osg_text/Text.h>
+#include <osg_text/Text.hpp>
 
 namespace osg_material_manager {
   class OsgMaterialManager;

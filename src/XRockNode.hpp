@@ -8,7 +8,7 @@
 #define OSG_GRAPH_VIZ_XROCK_NODE_HPP
 
 #include "RoundBodyNode.hpp"
-#include <mars/osg_text/Text.h>
+#include <osg_text/Text.hpp>
 #include <memory>
 #include <map>
 

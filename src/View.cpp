@@ -15,9 +15,9 @@
 #include <osg/LineWidth>
 #include <cstdio>
 #include <osgDB/ReadFile>
-#include <mars/utils/misc.h>
+#include <mars_utils/misc.h>
 
-#include <mars/osg_material_manager/OsgMaterialManager.h>
+#include <osg_material_manager/OsgMaterialManager.hpp>
 #ifdef _WIN32
   #include <io.h>
 #endif

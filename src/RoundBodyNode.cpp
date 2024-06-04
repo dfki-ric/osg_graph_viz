@@ -21,8 +21,8 @@
 // y is going from down to top
 // x is going from left to right
 
-#include <mars/osg_material_manager/OsgMaterialManager.h>
-#include <mars/osg_material_manager/MaterialNode.h>
+#include <osg_material_manager/OsgMaterialManager.hpp>
+#include <osg_material_manager/MaterialNode.hpp>
 
 using namespace configmaps;
 using namespace osg_material_manager;

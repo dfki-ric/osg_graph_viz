@@ -11,7 +11,7 @@
 #include <osg/Geometry>
 #include <osg/PositionAttitudeTransform>
 
-#include <mars/osg_text/Text.h>
+#include <osg_text/Text.hpp>
 #include <configmaps/ConfigMap.hpp>
 
 #include "Edge.hpp"

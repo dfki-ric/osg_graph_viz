@@ -17,8 +17,8 @@
 
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
-#include <mars/osg_material_manager/OsgMaterialManager.h>
-#include <mars/osg_material_manager/MaterialNode.h>
+#include <osg_material_manager/OsgMaterialManager.hpp>
+#include <osg_material_manager/MaterialNode.hpp>
 
 using namespace configmaps;
 

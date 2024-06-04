@@ -14,7 +14,7 @@
 #include <osg/LineWidth>
 #include <cstdio>
 #include <configmaps/ConfigData.h>
-#include <mars/utils/misc.h>
+#include <mars_utils/misc.h>
 
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>

@@ -16,7 +16,7 @@
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
 
-#include <mars/osg_material_manager/OsgMaterialManager.h>
+#include <osg_material_manager/OsgMaterialManager.hpp>
 
 // y is going from down to top
 // x is going from left to right

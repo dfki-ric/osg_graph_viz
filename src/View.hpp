@@ -20,7 +20,7 @@
 #include <osg/Camera>
 #include <list>
 
-#include <mars/osg_text/Text.h>
+#include <osg_text/Text.hpp>
 
 namespace osg_material_manager {
   class OsgMaterialManager;
