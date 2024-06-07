@@ -3,7 +3,7 @@
       2D graph visualization library based on OpenSceneGraph.
    </description>
    <depend package="simulation/lib_manager" />
-   <depend package="simulation/mars_utils" />
+   <depend package="simulation/utils" />
    <depend package="simulation/graphics_collection/osg_text" />
    <depend package="simulation/graphics_collection/osg_material_manager" />
    <depend package="tools/configmaps" />
