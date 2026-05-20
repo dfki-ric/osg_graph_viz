@@ -149,7 +149,7 @@ namespace osg_graph_viz {
       weight = new osg_text::Text(info["weight"].toString(), 8, c, 0, 0,
                                   osg_text::ALIGN_LEFT, 0, 0, 0, 0,
                                   osg_text::Color(), osg_text::Color(),
-                                  0, view->getResourcesPath()+"/fonts/Stilu-Light.ttf");
+                                  0, view->getResourcesPath()+"/fonts/stilu/Stilu-Light.ttf");
       weight->setBackgroundColor(osg_text::Color(0.0, 0.0, 0.0, 0.0));
       updateWeightPos();
       if((double)info["weight"] > 1.0000001 ||
@@ -167,7 +167,7 @@ namespace osg_graph_viz {
     decoupleIn = new osg_text::Text("foo", 6, c, 0, 0,
                                     osg_text::ALIGN_RIGHT, 0, 0, 0, 0,
                                     osg_text::Color(), osg_text::Color(),
-                                    0, view->getResourcesPath()+"/fonts/Stilu-Light.ttf");
+                                    0, view->getResourcesPath()+"/fonts/stilu/Stilu-Light.ttf");
     decoupleIn->setBackgroundColor(osg_text::Color(0.98, 0.7, 0.98, 1.0));
     decoupleIn->setBorderColor(osg_text::Color(0.3, 0.3, 0.3, 1.0));
     decoupleIn->setBorderWidth(3);
@@ -175,7 +175,7 @@ namespace osg_graph_viz {
     decoupleOut = new osg_text::Text("foo", 6, c, 0, 0,
                                      osg_text::ALIGN_LEFT, 0, 0, 0, 0,
                                      osg_text::Color(), osg_text::Color(),
-                                     0, view->getResourcesPath()+"/fonts/Stilu-Light.ttf");
+                                     0, view->getResourcesPath()+"/fonts/stilu/Stilu-Light.ttf");
     decoupleOut->setBackgroundColor(osg_text::Color(0.98, 0.7, 0.98, 1.0));
     decoupleOut->setBorderColor(osg_text::Color(0.3, 0.3, 0.3, 1.0));
     decoupleOut->setBorderWidth(3);

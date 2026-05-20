@@ -119,7 +119,7 @@ namespace osg_graph_viz {
     infoText = new osg_text::Text("mouse [] ...", 15, c, 10, 1055,
                                   osg_text::ALIGN_LEFT, 0, 0, 0, 0,
                                   osg_text::Color(), osg_text::Color(),
-                                  0, resourcesPath+"fonts/Stilu-Light.ttf");
+                                  0, resourcesPath+"fonts/stilu/Stilu-Light.ttf");
 
     cameraScale->addChild((osg::Node*)infoText->getOSGNode());
 
@@ -1513,7 +1513,7 @@ namespace osg_graph_viz {
                                   osg_text::ALIGN_LEFT, 10, 2, 10, 2,
                                   osg_text::Color(1.0, 1.0, 0.9, 1.),
                                   osg_text::Color(0.1, 0.1, 0.1, 1),
-                                  3, resourcesPath+"fonts/Stilu-Light.ttf");
+                                  3, resourcesPath+"fonts/stilu/Stilu-Light.ttf");
     cameraScale->addChild((osg::Node*)t->label->getOSGNode());
     tabMap[name] = t;
     if(currentTab) {
