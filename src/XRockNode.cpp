@@ -299,10 +299,10 @@ namespace osg_graph_viz {
           if(w4 > w2) w2 = w4;
           p->labels[n]->setPosition(mergeIconSize*0.5+2, portPosY + mergeIconSize*2 - portFontSize*0.6 - n*portFontSize*1.5);
         }
-        int interface=0;
+        int interface_=0;
         std::string direction;
         if(info.map["inputs"][i].hasKey("interface")) {
-          interface = info.map["inputs"][i]["interface"];
+          interface_ = info.map["inputs"][i]["interface"];
         }
         if(info.map["inputs"][i].hasKey("direction")) {
           direction << info.map["inputs"][i]["direction"];
@@ -328,10 +328,10 @@ namespace osg_graph_viz {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
         }
-        if(interface == 1) {
+        if(interface_ == 1) {
           c = osg::Vec4(1.0, 0.9, 0.7, 1);
         }
-        else if(interface == 2) {
+        else if(interface_ == 2) {
           c = osg::Vec4(1.0, 1.0, 0.7, 1);
         }
         Frame frame = {w2+4.5, mergeIconSize*3, 4.5, portPosY-mergeIconSize*1.4, osg::Vec4(0.3, 0.3, 0.3, 1), c, true};
@@ -435,12 +435,12 @@ namespace osg_graph_viz {
           if(w4 > w2) w2 = w4;
           p->labels[n]->setPosition(width - (mergeIconSize*0.5 + 2.0), portPosY + mergeIconSize*2 - portFontSize*0.6 - n*portFontSize*1.5);
         }
-        int interface=0;
+        int interface_=0;
         if(p->hidden) {
           continue;
         }
         if(info.map["outputs"][i].hasKey("interface")) {
-          interface = info.map["outputs"][i]["interface"];
+          interface_ = info.map["outputs"][i]["interface"];
         }
         osg::Vec4 c(1.0, 1.0, 1.0, 1);
         if(!domain.empty()) {
@@ -460,10 +460,10 @@ namespace osg_graph_viz {
             c = osg::Vec4(1.0, .8, 0.8, 1.0);
           }
         }
-        if(interface == 1) {
+        if(interface_ == 1) {
           c = osg::Vec4(1.0, 0.9, 0.7, 1);
         }
-        else if(interface == 2) {
+        else if(interface_ == 2) {
           c = osg::Vec4(1.0, 1.0, 0.7, 1);
         }
         Frame frame = {w2+4.5, mergeIconSize*3, width-w2-9.0, portPosY-mergeIconSize*1.4, osg::Vec4(0.3, 0.3, 0.3, 1), c, true};
@@ -746,16 +746,16 @@ namespace osg_graph_viz {
       osg::Geometry *geom;
       geom = (*it)->group->getChild(0)->asGeode()->getDrawable(0)->asGeometry();
       colors = dynamic_cast< osg::Vec4Array *>(geom->getColorArray());
-      int interface = 0;
+      int interface_ = 0;
       if(info.map["inputs"][i].hasKey("interface")) {
-        interface = info.map["inputs"][i]["interface"];
+        interface_ = info.map["inputs"][i]["interface"];
       }
       std::string domain;
       if(mars::utils::tolower(info.map["domain"]) == "assembly" && info.map["inputs"][i].hasKey("domain")) {
         domain = mars::utils::tolower(info.map["inputs"][i]["domain"]);
       }
       osg::Vec4 c(1.0, 1.0, 1.0, 1);
-      if(!interface && !domain.empty()) {
+      if(!interface_ && !domain.empty()) {
         if(domain == "MECHANICS") {
           c = osg::Vec4(0.95, .9, 0.8, 1.0);
         }
@@ -772,10 +772,10 @@ namespace osg_graph_viz {
           c = osg::Vec4(1.0, .8, 0.8, 1.0);
         }
       }
-      if(interface == 1) {
+      if(interface_ == 1) {
         c = osg::Vec4(1.0, 0.9, 0.7, 1);
       }
-      else if(interface == 2) {
+      else if(interface_ == 2) {
         c = osg::Vec4(1.0, 1.0, 0.7, 1);
       }
       colors->operator[](1) = c;
